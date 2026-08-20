@@ -1,0 +1,70 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <group
+        android:pivotX="54"
+        android:pivotY="54"
+        android:scaleX="0.75"
+        android:scaleY="0.75">
+        <!-- Hexagon Border -->
+        <path
+            android:pathData="M54,15 L88,34.5 L88,73.5 L54,93 L20,73.5 L20,34.5 Z"
+            android:strokeColor="#00FFFF"
+            android:strokeWidth="2"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+
+        <!-- ABC Letters Stilizovane -->
+        <!-- Letter A -->
+        <path
+            android:pathData="M28,68 L36,42 L44,68"
+            android:strokeColor="#00FFFF"
+            android:strokeWidth="3.5"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+        <path
+            android:pathData="M31,60 L41,60"
+            android:strokeColor="#00FFFF"
+            android:strokeWidth="3.5"
+            android:strokeLineCap="round" />
+
+        <!-- Letter B -->
+        <path
+            android:pathData="M49,42 L49,68 L58,68 C62,68 64,65 64,62 C64,59 62,56 58,56 L49,56 M49,56 L56,56 C60,56 62,53 62,50 C62,47 60,44 56,44 L49,44"
+            android:strokeColor="#00FFFF"
+            android:strokeWidth="3.5"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+
+        <!-- Letter C -->
+        <path
+            android:pathData="M82,48 C82,42 68,42 68,55 C68,68 82,68 82,62"
+            android:strokeColor="#00FFFF"
+            android:strokeWidth="3.5"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round" />
+
+        <!-- BLE / Connection Dots -->
+        <path
+            android:pathData="M54,15 m-4,0 a4,4 0 1,1 8,0 a4,4 0 1,1 -8,0"
+            android:fillColor="#00FFFF" />
+        <path
+            android:pathData="M88,34.5 m-3,0 a3,3 0 1,1 6,0 a3,3 0 1,1 -6,0"
+            android:fillColor="#00FFFF" />
+        <path
+            android:pathData="M88,73.5 m-3,0 a3,3 0 1,1 6,0 a3,3 0 1,1 -6,0"
+            android:fillColor="#00FFFF" />
+        <path
+            android:pathData="M54,93 m-3,0 a3,3 0 1,1 6,0 a3,3 0 1,1 -6,0"
+            android:fillColor="#00FFFF" />
+        <path
+            android:pathData="M20,73.5 m-3,0 a3,3 0 1,1 6,0 a3,3 0 1,1 -6,0"
+            android:fillColor="#00FFFF" />
+        <path
+            android:pathData="M20,34.5 m-3,0 a3,3 0 1,1 6,0 a3,3 0 1,1 -6,0"
+            android:fillColor="#00FFFF" />
+    </group>
+</vector>
