@@ -37,7 +37,11 @@ class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return MainViewModel(BluetoothService()) as T
+                if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+                    @Suppress("UNCHECKED_CAST")
+                    return MainViewModel(BluetoothService()) as T
+                }
+                throw IllegalArgumentException("Unknown ViewModel class")
             }
         }
     }
