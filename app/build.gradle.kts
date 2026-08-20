@@ -20,12 +20,16 @@ android {
 
     signingConfigs {
         create("release") {
-            // Preuzimanje podataka iz Environment varijabli (za GitHub Actions)
-            // ili korišćenje lokalnih vrednosti ako postoje
-            storeFile = file(System.getenv("KEYSTORE_PATH") ?: "keystore.jks")
-            storePassword = System.getenv("KEYSTORE_PASSWORD")
-            keyAlias = System.getenv("KEY_ALIAS")
-            keyPassword = System.getenv("KEY_PASSWORD")
+            val path = System.getenv("KEYSTORE_PATH") ?: "keystore.jks"
+            val ksFile = file(path)
+            
+            // Use release signing only if the file exists and parameters are provided
+            if (ksFile.exists()) {
+                storeFile = ksFile
+                storePassword = System.getenv("KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("KEY_ALIAS")
+                keyPassword = System.getenv("KEY_PASSWORD")
+            }
         }
     }
 
@@ -37,9 +41,11 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            // Koristi release potpisivanje samo ako su parametri dostupni
-            if (System.getenv("KEYSTORE_PASSWORD") != null) {
-                signingConfig = signingConfigs.getByName("release")
+            
+            // Set signingConfig only if parameters are actually loaded
+            val releaseConfig = signingConfigs.getByName("release")
+            if (releaseConfig.storeFile?.exists() == true) {
+                signingConfig = releaseConfig
             }
         }
     }
