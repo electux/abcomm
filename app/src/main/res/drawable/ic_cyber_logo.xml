@@ -17,7 +17,7 @@
             android:strokeLineCap="round"
             android:strokeLineJoin="round" />
 
-        <!-- ABC Letters Stilizovane -->
+        <!-- ABC Letters Stylized -->
         <!-- Letter A -->
         <path
             android:pathData="M28,68 L36,42 L44,68"
