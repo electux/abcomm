@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="108" height="108" viewBox="0 0 108 108">
+    <!-- Background for preview clarity, usually transparent -->
+    <rect width="108" height="108" fill="#0D0D0D" rx="15" />
+
+    <g transform="translate(54,54) scale(0.75) translate(-54,-54)">
+        <!-- Hexagon Border -->
+        <path d="M54,15 L88,34.5 L88,73.5 L54,93 L20,73.5 L20,34.5 Z"
+              fill="none" stroke="#00FFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+
+        <!-- ABC Letters -->
+        <!-- Letter A -->
+        <path d="M28,68 L36,42 L44,68"
+              fill="none" stroke="#00FFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M31,60 L41,60"
+              fill="none" stroke="#00FFFF" stroke-width="3.5" stroke-linecap="round" />
+
+        <!-- Letter B -->
+        <path d="M49,42 L49,68 L58,68 C62,68 64,65 64,62 C64,59 62,56 58,56 L49,56 M49,56 L56,56 C60,56 62,53 62,50 C62,47 60,44 56,44 L49,44"
+              fill="none" stroke="#00FFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+
+        <!-- Letter C -->
+        <path d="M82,48 C82,42 68,42 68,55 C68,68 82,68 82,62"
+              fill="none" stroke="#00FFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+
+        <!-- BLE Dots -->
+        <circle cx="54" cy="15" r="4" fill="#00FFFF" />
+        <circle cx="88" cy="34.5" r="3" fill="#00FFFF" />
+        <circle cx="88" cy="73.5" r="3" fill="#00FFFF" />
+        <circle cx="54" cy="93" r="3" fill="#00FFFF" />
+        <circle cx="20" cy="73.5" r="3" fill="#00FFFF" />
+        <circle cx="20" cy="34.5" r="3" fill="#00FFFF" />
+    </g>
+</svg>

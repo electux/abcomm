@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">ABComm</string>
+    <string name="status_label">SYSTEM STATUS: %1$s</string>
+    <string name="status_connected">CONNECTED TO %1$s</string>
+    <string name="status_disconnected">DISCONNECTED</string>
+    <string name="status_initializing">INITIALIZING...</string>
+
+    <string name="btn_connect">CONNECT</string>
+    <string name="btn_disconnect">DISCONNECT</string>
+    <string name="btn_all_on">ALL CHANNELS ON</string>
+    <string name="btn_force_shutdown">FORCE SHUTDOWN</string>
+
+    <string name="channel_active">CH 0%1$d [ACTIVE]</string>
+    <string name="channel_off">CH 0%1$d [OFF]</string>
+
+    <string name="error_no_bluetooth">CORE ERROR: NO BLUETOOTH</string>
+    <string name="error_bt_disabled">HARDWARE OFFLINE: ENABLE BT</string>
+    <string name="error_no_targets">NO TARGETS DETECTED</string>
+    <string name="error_link_offline">LINK OFFLINE</string>
+
+    <string name="dialog_select_target">SELECT TARGET DEVICE</string>
+    <string name="dialog_abort">ABORT</string>
+</resources>
