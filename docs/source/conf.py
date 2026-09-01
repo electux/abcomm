@@ -19,7 +19,7 @@ extensions = []
 templates_path = ['_templates']
 exclude_patterns = []
 
-root_doc = 'index.rst'
+root_doc = 'index'
 
 
 # -- Options for HTML output -------------------------------------------------
