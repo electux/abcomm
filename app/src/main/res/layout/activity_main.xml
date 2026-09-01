@@ -20,40 +20,201 @@
         app:strokeColor="@color/cyber_cyan"
         app:strokeWidth="1dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:padding="12dp">
 
+            <!-- Mode Selector Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/toggle_mode_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:checkedButton="@id/btn_mode_ble"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_mode_ble"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="monospace"
+                        android:text="@string/mode_ble"
+                        android:textColor="@color/cyber_cyan"
+                        android:textSize="11sp"
+                        app:strokeColor="@color/cyber_cyan" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_mode_wifi"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="monospace"
+                        android:text="@string/mode_wifi"
+                        android:textColor="@color/cyber_cyan"
+                        android:textSize="11sp"
+                        app:strokeColor="@color/cyber_cyan" />
+
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_connect"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="monospace"
+                    android:text="@string/btn_connect"
+                    android:textColor="@color/cyber_cyan"
+                    app:cornerRadius="4dp"
+                    app:strokeColor="@color/cyber_cyan" />
+
+            </LinearLayout>
+
+            <!-- WiFi Inputs (IP & Port) -->
+            <LinearLayout
+                android:id="@+id/layout_wifi_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:hint="@string/label_ip"
+                    app:boxStrokeColor="@color/cyber_cyan"
+                    app:hintTextColor="@color/cyber_cyan">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_wifi_ip"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="monospace"
+                        android:inputType="text"
+                        android:text="192.168.1.100"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:hint="@string/label_port"
+                    app:boxStrokeColor="@color/cyber_cyan"
+                    app:hintTextColor="@color/cyber_cyan">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_wifi_port"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="monospace"
+                        android:inputType="number"
+                        android:text="5000"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <!-- System Status -->
             <TextView
                 android:id="@+id/tv_status"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:fontFamily="monospace"
                 android:maxLines="2"
                 android:text="SYSTEM STATUS: DISCONNECTED"
                 android:textColor="@color/cyber_cyan"
                 android:textSize="12sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/btn_connect"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:textStyle="bold" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_connect"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="wrap_content"
+            <!-- Device Info (ID & FW Version) -->
+            <TextView
+                android:id="@+id/tv_device_info"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:fontFamily="monospace"
-                android:text="CONNECT"
                 android:textColor="@color/cyber_cyan"
-                app:cornerRadius="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:strokeColor="@color/cyber_cyan" />
+                android:textSize="10sp"
+                android:visibility="gone"
+                tools:text="DEVICE: mh:333:2023:0 | FW: microHIL v1.0.0"
+                tools:visibility="visible" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- Last Response from Device -->
+            <TextView
+                android:id="@+id/tv_last_response"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="monospace"
+                android:maxLines="2"
+                android:textColor="@color/cyber_green"
+                android:textSize="11sp"
+                android:visibility="gone"
+                tools:text="LAST RESP: &lt;mh#sys#channel 1 on#end&gt;"
+                tools:visibility="visible" />
+
+            <!-- Quick Action Row (Sync / Reset) -->
+            <LinearLayout
+                android:id="@+id/layout_quick_actions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_sync"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
+                    android:fontFamily="monospace"
+                    android:padding="0dp"
+                    android:text="@string/btn_sync"
+                    android:textColor="@color/cyber_cyan"
+                    android:textSize="10sp"
+                    app:cornerRadius="4dp"
+                    app:strokeColor="@color/cyber_cyan"
+                    app:strokeWidth="1dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_reset"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="1"
+                    android:fontFamily="monospace"
+                    android:padding="0dp"
+                    android:text="@string/btn_reset"
+                    android:textColor="@color/cyber_red"
+                    android:textSize="10sp"
+                    app:cornerRadius="4dp"
+                    app:strokeColor="@color/cyber_red"
+                    app:strokeWidth="1dp" />
+            </LinearLayout>
+
+        </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
     <!-- Main Command Grid -->

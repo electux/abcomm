@@ -17,7 +17,24 @@
     <string name="error_bt_disabled">HARDWARE OFFLINE: ENABLE BT</string>
     <string name="error_no_targets">NO TARGETS DETECTED</string>
     <string name="error_link_offline">LINK OFFLINE</string>
+    <string name="error_invalid_wifi">INVALID IP OR PORT</string>
 
     <string name="dialog_select_target">SELECT TARGET DEVICE</string>
     <string name="dialog_abort">ABORT</string>
+
+    <string name="mode_ble">BLE</string>
+    <string name="mode_wifi">WIFI (TCP)</string>
+    <string name="label_ip">TARGET IP</string>
+    <string name="label_port">PORT</string>
+    <string name="hint_ip">192.168.1.100</string>
+    <string name="hint_port">5000</string>
+    <string name="last_response_label">LAST RESP: %1$s</string>
+    <string name="device_info_label">DEVICE: %1$s | FW: %2$s</string>
+    <string name="btn_sync">SYNC</string>
+    <string name="btn_reset">RESET</string>
+    <string name="dialog_reboot_title">REBOOT CONFIRMATION</string>
+    <string name="dialog_reboot_message">Are you sure you want to reboot the microHIL device?</string>
+    <string name="dialog_reboot_confirm">REBOOT</string>
+    <string name="toast_syncing">Syncing device status...</string>
+    <string name="label_not_available">N/A</string>
 </resources>
