@@ -24,10 +24,11 @@ The application features a Cyberpunk-styled interface supporting dual-mode conne
   - [Run Unit Tests](#run-unit-tests)
 - [📦 Dependencies & Permissions](#-dependencies--permissions)
 - [📁 Project Architecture](#-project-architecture)
-- [🛠 Usage Guide](#-usage-guide)
+- [🛠 Usage & Hardware Emulation Guide](#-usage--hardware-emulation-guide)
   - [Bluetooth (BLE / RFCOMM) Mode](#bluetooth-ble--rfcomm-mode)
   - [Wi-Fi (TCP Socket) Mode](#wi-fi-tcp-socket-mode)
-  - [Testing with Python Mock Server](#testing-with-python-mock-server)
+  - [Testing Bluetooth with Linux Laptop](#testing-bluetooth-with-linux-laptop)
+  - [Testing Wi-Fi with Python Mock Server](#testing-wi-fi-with-python-mock-server)
 - [👥 Contributing](#-contributing)
 - [📄 License](#-license)
 
@@ -43,6 +44,7 @@ The application features a Cyberpunk-styled interface supporting dual-mode conne
 * **Manual Sync & Device Reboot**: Dedicated **SYNC** button for manual state refreshing and **RESET** button with a confirmation dialog.
 * **Robust Disconnection Handling**: Immediate socket cleanup and automatic UI state reset to `OFF` when the device disconnects or powers down.
 * **Clean Architecture**: 100% Type-Safe (`ConnectionStatus`, `DeviceResponse`), Dependency Inversion (DIP), Open/Closed (OCP) response matchers, and Coroutine-based background I/O (`Dispatchers.IO`).
+* **Hardware-Free Testing Scripts**: Ready-to-use scripts in `scripts/` to emulate both Bluetooth SPP and Wi-Fi TCP servers from a laptop without physical Pico hardware.
 
 ---
 
@@ -106,59 +108,77 @@ The app declares and dynamically requests appropriate permissions:
 The codebase strictly follows the **Single Type per File** and **SOLID** principles, organized into domain packages:
 
 ```bash
-app/src/main/java/com/abcomm/
-├── protocol/
-│   ├── MicrohilProtocolConstants.kt       # Protocol frame delimiters and command keywords
-│   ├── CommandFormatter.kt                # Contract for outbound command formatting
-│   ├── MicrohilCommandFormatter.kt        # Implementation of CommandFormatter
-│   ├── FrameParser.kt                     # Stream framing contract (<...>)
-│   ├── MicrohilFrameParser.kt             # Chunked stream frame extractor
-│   ├── DeviceResponse.kt                  # Sealed interface for typed device responses
-│   ├── ResponseParser.kt                  # Response parsing contract
-│   ├── ResponseMatcher.kt                 # Extensible response matcher interface (OCP)
-│   ├── MicrohilResponseParser.kt          # ResponseParser delegating to matcher list
-│   └── matchers/                          # Individual pattern matchers for each response
-│       ├── ChannelStateMatcher.kt
-│       ├── AllChannelsStateMatcher.kt
-│       ├── AllChannelsSnapshotMatcher.kt
-│       ├── MaskAppliedMatcher.kt
-│       ├── BoardIdMatcher.kt
-│       ├── FirmwareVersionMatcher.kt
-│       └── SystemResettingMatcher.kt
+abcomm/
+├── app/
+│   └── src/
+│       ├── main/java/com/abcomm/
+│       │   ├── protocol/
+│       │   │   ├── MicrohilProtocolConstants.kt       # Delimiters and command keywords
+│       │   │   ├── CommandFormatter.kt                # Outbound formatting contract
+│       │   │   ├── MicrohilCommandFormatter.kt        # Implementation of CommandFormatter
+│       │   │   ├── FrameParser.kt                     # Stream framing contract (<...>)
+│       │   │   ├── MicrohilFrameParser.kt             # Chunked stream extractor
+│       │   │   ├── DeviceResponse.kt                  # Typed device response model
+│       │   │   ├── ResponseParser.kt                  # Response parser contract
+│       │   │   ├── ResponseMatcher.kt                 # Response matcher interface (OCP)
+│       │   │   ├── MicrohilResponseParser.kt          # Parser delegating to matchers
+│       │   │   └── matchers/                          # Individual pattern matchers
+│       │   │       ├── ChannelStateMatcher.kt
+│       │   │       ├── AllChannelsStateMatcher.kt
+│       │   │       ├── AllChannelsSnapshotMatcher.kt
+│       │   │       ├── MaskAppliedMatcher.kt
+│       │   │       ├── BoardIdMatcher.kt
+│       │   │       ├── FirmwareVersionMatcher.kt
+│       │   │       └── SystemResettingMatcher.kt
+│       │   │
+│       │   ├── communication/
+│       │   │   ├── ConnectionMode.kt                  # Enum: BLE, WIFI
+│       │   │   ├── ConnectionTarget.kt                # Sealed: Bluetooth, Wifi
+│       │   │   ├── ConnectionStatus.kt                # Sealed: Disconnected, Connecting, Connected, Error
+│       │   │   ├── ConnectionController.kt            # Lifecycle contract
+│       │   │   ├── CommandSender.kt                   # Dispatch contract
+│       │   │   ├── ConnectionObservable.kt            # Observer contract
+│       │   │   ├── CommunicationProvider.kt           # Composite provider contract
+│       │   │   ├── CommunicationProviderRegistry.kt   # Provider registry contract
+│       │   │   ├── DefaultCommunicationProviderRegistry.kt
+│       │   │   ├── BluetoothService.kt                # RFCOMM provider (Coroutines / Dispatchers.IO)
+│       │   │   └── WifiService.kt                     # TCP Socket provider (Coroutines / Dispatchers.IO)
+│       │   │
+│       │   ├── settings/
+│       │   │   ├── AppSettings.kt                     # Config data model & port boundaries
+│       │   │   ├── AppSettingsRepository.kt           # Storage contract
+│       │   │   └── SharedPreferencesSettingsRepository.kt
+│       │   │
+│       │   ├── ui/
+│       │   │   ├── MainUiState.kt                     # Immutable UI State model
+│       │   │   ├── MainViewModel.kt                   # ViewModel state machine
+│       │   │   ├── MainViewModelFactory.kt            # Dependency injection factory
+│       │   │   ├── BluetoothPermissionChecker.kt      # Permission checker interface
+│       │   │   ├── BluetoothPermissionHelper.kt       # SDK version-aware helper
+│       │   │   ├── BluetoothDeviceProvider.kt         # Bluetooth adapter interface
+│       │   │   └── BluetoothDeviceManager.kt          # Paired device manager
+│       │   │
+│       │   └── MainActivity.kt                        # Primary Android Activity view layer
+│       │
+│       └── test/java/com/abcomm/                      # Complete MockK Unit Test Suite
 │
-├── communication/
-│   ├── ConnectionMode.kt                  # Enum: BLE, WIFI
-│   ├── ConnectionTarget.kt                # Sealed interface: Bluetooth(device), Wifi(host, port)
-│   ├── ConnectionStatus.kt                # Sealed interface: Disconnected, Connecting, Connected, Error
-│   ├── ConnectionController.kt            # Lifecycle management contract
-│   ├── CommandSender.kt                   # Command dispatch contract
-│   ├── ConnectionObservable.kt            # Status and response observer contract
-│   ├── CommunicationProvider.kt           # Composite provider interface
-│   ├── CommunicationProviderRegistry.kt   # Dynamic provider resolution contract
-│   ├── DefaultCommunicationProviderRegistry.kt
-│   ├── BluetoothService.kt                # RFCOMM Bluetooth provider (Coroutines / Dispatchers.IO)
-│   └── WifiService.kt                     # TCP Socket Wi-Fi provider (Coroutines / Dispatchers.IO)
+├── docs/                                              # Sphinx / ReadTheDocs Documentation
+│   └── source/
+│       ├── conf.py
+│       └── index.rst
 │
-├── settings/
-│   ├── AppSettings.kt                     # Configuration data model and port boundaries
-│   ├── AppSettingsRepository.kt           # Storage abstraction contract
-│   └── SharedPreferencesSettingsRepository.kt
-│
-├── ui/
-│   ├── MainUiState.kt                     # Immutable UI State data model
-│   ├── MainViewModel.kt                   # State machine orchestrating UI & hardware
-│   ├── MainViewModelFactory.kt            # Dependency injection factory
-│   ├── BluetoothPermissionChecker.kt      # Permission checker interface
-│   ├── BluetoothPermissionHelper.kt       # Android SDK version-aware permission helper
-│   ├── BluetoothDeviceProvider.kt         # Bluetooth adapter abstraction interface
-│   └── BluetoothDeviceManager.kt          # Paired device manager
-│
-└── MainActivity.kt                        # Primary Android Activity view layer
+└── scripts/                                           # Hardware Emulation & Testing Scripts
+    ├── ble/
+    │   ├── ble_listen.sh                              # Linux RFCOMM SPP sniffer/server script
+    │   └── README.md                                  # Bluetooth test setup guide
+    └── wifi/
+        ├── wifi_server.py                             # Python TCP microHIL mock server
+        └── README.md                                  # Wi-Fi test setup guide
 ```
 
 ---
 
-## 🛠 Usage Guide
+## 🛠 Usage & Hardware Emulation Guide
 
 ### Bluetooth (BLE / RFCOMM) Mode
 
@@ -175,16 +195,35 @@ app/src/main/java/com/abcomm/
 3. Tap **CONNECT**.
 4. Telemetry and relay buttons will update automatically upon connection.
 
-### Testing with Python Mock Server
+### Testing Bluetooth with Linux Laptop
 
-You can test Wi-Fi communication without physical hardware using the included mock server:
+To test Bluetooth connectivity without physical Raspberry Pi Pico hardware, configure a Linux (Ubuntu) laptop as an RFCOMM server:
+
+```bash
+# In Terminal A on Ubuntu:
+chmod +x scripts/ble/ble_listen.sh
+./scripts/ble/ble_listen.sh
+
+# In Terminal B (to monitor commands sent from phone):
+sudo cat /dev/rfcomm10
+```
+
+Refer to [`scripts/ble/README.md`](scripts/ble/README.md) for full Bluetooth pairing and compatibility instructions.
+
+### Testing Wi-Fi with Python Mock Server
+
+To test Wi-Fi communication without physical hardware, run the Python mock server:
 
 ```bash
 # Run the mock server from the repository root
-python3 wifi/wifi_server.py
+python3 scripts/wifi/wifi_server.py --port 5000
 ```
 
-The mock server binds to `0.0.0.0:5000` and emulates real microHIL firmware behavior (board ID, version, channel toggling, and snapshots).
+1. The script will print the laptop's local IP address (e.g. `192.168.1.150`).
+2. In the ABComm app, switch to **WIFI** mode, enter the printed IP and port `5000`, and tap **CONNECT**.
+3. All button presses will update real-time terminal logs and reflect microHIL firmware behavior.
+
+Refer to [`scripts/wifi/README.md`](scripts/wifi/README.md) for further details.
 
 ---
 
