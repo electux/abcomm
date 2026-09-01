@@ -1,8 +1,8 @@
 .. ABComm documentation master file
 
-===============================================
+=================================================
 ABComm - Advanced Bluetooth & Wi-Fi Relay Control
-===============================================
+=================================================
 
 .. image:: https://raw.githubusercontent.com/electux/abcomm/main/docs/logo.svg
    :align: right
